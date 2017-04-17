@@ -364,7 +364,7 @@ module Plywood {
      * @param expressionJS
      * @param req
      */
-    static fromJS(expressionJS: ExpressionJS, req: any = null): Expression {
+    static fromJS(expressionJS: ExpressionJS, req?: any = null): Expression {
       if (!hasOwnProperty(expressionJS, "op")) {
         throw new Error("op must be defined");
       }

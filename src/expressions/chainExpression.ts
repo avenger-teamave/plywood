@@ -1,6 +1,6 @@
 module Plywood {
   export class ChainExpression extends Expression {
-    static fromJS(parameters: ExpressionJS, req: any = null): ChainExpression {
+    static fromJS(parameters: ExpressionJS, req?: any = null): ChainExpression {
       var value: ExpressionValue = {
         op: parameters.op
       };
@@ -18,7 +18,7 @@ module Plywood {
     public expression: Expression;
     public actions: Action[];
 
-    constructor(parameters: ExpressionValue, req: any = null) {
+    constructor(parameters: ExpressionValue, req?: any = null) {
       super(parameters, dummyObject);
       var expression = parameters.expression;
       this.expression = expression;
