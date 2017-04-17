@@ -1001,7 +1001,7 @@ declare module "plywood" {
         nest: int;
         name: string;
         remote: boolean;
-        constructor(parameters: ExpressionValue, req?: any = null);
+        constructor(parameters: ExpressionValue, req?: any);
         valueOf(): ExpressionValue;
         toJS(): ExpressionJS;
         toString(): string;
