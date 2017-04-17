@@ -6973,7 +6973,7 @@ var Plywood;
             else {
                 value.value = Plywood.valueFromJS(v, parameters.type);
             }
-            return new LiteralExpression(value);
+            return new LiteralExpression(value, req);
         };
         LiteralExpression.prototype.valueOf = function () {
             var value = _super.prototype.valueOf.call(this);
@@ -7172,7 +7172,7 @@ var Plywood;
                     type: parameters.type
                 };
             }
-            return new RefExpression(value);
+            return new RefExpression(value, req);
         };
         RefExpression.parse = function (str) {
             var refValue = { op: 'ref' };
@@ -7362,7 +7362,7 @@ var Plywood;
                 op: parameters.op
             };
             value.external = Plywood.External.fromJS(parameters.external);
-            return new ExternalExpression(value);
+            return new ExternalExpression(value, req);
         };
         ExternalExpression.prototype.valueOf = function () {
             var value = _super.prototype.valueOf.call(this);
@@ -7461,7 +7461,7 @@ var Plywood;
                     throw new Error('chain `actions` must be an array');
                 value.actions = parameters.actions.map(Plywood.Action.fromJS);
             }
-            return new ChainExpression(value);
+            return new ChainExpression(value, req);
         };
         ChainExpression.prototype.valueOf = function () {
             var value = _super.prototype.valueOf.call(this);

@@ -5,7 +5,7 @@ module Plywood {
         op: parameters.op
       };
       value.external = External.fromJS(parameters.external);
-      return new ExternalExpression(value);
+      return new ExternalExpression(value, req);
     }
 
     public external: External;
