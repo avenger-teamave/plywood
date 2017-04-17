@@ -1,37 +1,62 @@
 {
-  "name": "plywood",
-  "version": "0.10.30",
-  "description": "split-apply-combine; unify data and vis; with single language",
-  "keywords": [
-    "split",
-    "apply",
-    "combine",
-    "visualization"
+  "_args": [
+    [
+      {
+        "raw": "plywood@0.10.30",
+        "scope": null,
+        "escapedName": "plywood",
+        "name": "plywood",
+        "rawSpec": "0.10.30",
+        "spec": "0.10.30",
+        "type": "version"
+      },
+      "d:\\Projects\\druid_proxy\\pivot"
+    ]
   ],
+  "_from": "plywood@0.10.30",
+  "_id": "plywood@0.10.30",
+  "_inCache": true,
+  "_location": "/plywood",
+  "_nodeVersion": "6.2.1",
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/plywood-0.10.30.tgz_1465259367959_0.8920908572617918"
+  },
+  "_npmUser": {
+    "name": "vadimon",
+    "email": "vadimon@gmail.com"
+  },
+  "_npmVersion": "3.9.3",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "plywood@0.10.30",
+    "scope": null,
+    "escapedName": "plywood",
+    "name": "plywood",
+    "rawSpec": "0.10.30",
+    "spec": "0.10.30",
+    "type": "version"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/plywood/-/plywood-0.10.30.tgz",
+  "_shasum": "a3608f31464dc247093c07344e2b98803b898285",
+  "_shrinkwrap": null,
+  "_spec": "plywood@0.10.30",
+  "_where": "d:\\Projects\\druid_proxy\\pivot",
   "author": {
     "name": "Vadim Ogievetsky",
     "url": "http://vadim.ogievetsky.com"
   },
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/implydata/plywood.git"
+  "bugs": {
+    "url": "https://github.com/implydata/plywood/issues"
   },
-  "main": "build/plywood.js",
-  "typescript": {
-    "definition": "build/plywood.d.ts"
-  },
-  "scripts": {
-    "prepublish": "./prepublish"
-  },
-  "tonicExampleFilename": "docs/examples/tonic.js",
   "dependencies": {
     "immutable-class": "0.4.4",
     "q": "1.4.1"
   },
-  "peerDependencies": {
-    "chronoshift": "0.4.x"
-  },
+  "description": "split-apply-combine; unify data and vis; with single language",
   "devDependencies": {
     "browserify": "13.0.1",
     "chai": "3.5.0",
@@ -46,5 +71,44 @@
     "typescript": "1.8.10",
     "underscore": "1.8.3",
     "walltime-js": "0.1.2"
-  }
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "a3608f31464dc247093c07344e2b98803b898285",
+    "tarball": "https://registry.npmjs.org/plywood/-/plywood-0.10.30.tgz"
+  },
+  "gitHead": "4691cfeb4245c980e8bcc8de6cc3a48609aff394",
+  "homepage": "https://github.com/implydata/plywood#readme",
+  "keywords": [
+    "split",
+    "apply",
+    "combine",
+    "visualization"
+  ],
+  "license": "Apache-2.0",
+  "main": "build/plywood.js",
+  "maintainers": [
+    {
+      "name": "vadimon",
+      "email": "vadimon@gmail.com"
+    }
+  ],
+  "name": "plywood",
+  "optionalDependencies": {},
+  "peerDependencies": {
+    "chronoshift": "0.4.x"
+  },
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/implydata/plywood.git"
+  },
+  "scripts": {
+    "prepublish": "./prepublish"
+  },
+  "tonicExampleFilename": "docs/examples/tonic.js",
+  "typescript": {
+    "definition": "build/plywood.d.ts"
+  },
+  "version": "0.10.30"
 }
