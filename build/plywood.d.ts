@@ -599,7 +599,7 @@ declare module "plywood" {
         getDelegate(): External;
         simulateValue(lastNode: boolean, simulatedQueries: any[], externalForNext?: External): PlywoodValue;
         getQueryAndPostProcess(): QueryAndPostProcess<any>;
-        queryValue(lastNode: boolean, externalForNext?: External): Q.Promise<PlywoodValue>;
+        queryValue(lastNode: boolean, externalForNext?: External, req?: any): Q.Promise<PlywoodValue>;
         needsIntrospect(): boolean;
         getIntrospectAttributes(): Q.Promise<IntrospectResult>;
         introspect(): Q.Promise<External>;

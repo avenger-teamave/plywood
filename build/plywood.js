@@ -3483,14 +3483,14 @@ var Plywood;
         External.prototype.getQueryAndPostProcess = function () {
             throw new Error("can not call getQueryAndPostProcess directly");
         };
-        External.prototype.queryValue = function (lastNode, externalForNext) {
+        External.prototype.queryValue = function (lastNode, externalForNext, req) {
             if (externalForNext === void 0) { externalForNext = null; }
             var _a = this, mode = _a.mode, requester = _a.requester;
             if (!externalForNext)
                 externalForNext = this;
             var delegate = this.getDelegate();
             if (delegate) {
-                return delegate.queryValue(lastNode, externalForNext);
+                return delegate.queryValue(lastNode, externalForNext, req);
             }
             if (!requester) {
                 return Q.reject(new Error('must have a requester to make queries'));
@@ -3509,7 +3509,7 @@ var Plywood;
             if (next) {
                 var results = [];
                 finalResult = Plywood.helper.promiseWhile(function () { return query; }, function () {
-                    return requester({ query: query })
+                    return requester({ query: query, req: req })
                         .then(function (result) {
                         results.push(result);
                         query = next(query, result);
@@ -3520,7 +3520,7 @@ var Plywood;
                 });
             }
             else {
-                finalResult = requester({ query: query })
+                finalResult = requester({ query: query, req: req })
                     .then(queryAndPostProcess.postProcess);
             }
             if (!lastNode && mode === 'split') {
@@ -7406,7 +7406,7 @@ var Plywood;
             var external = this.external;
             if (external.suppress)
                 return Q(external);
-            return external.queryValue(lastNode);
+            return external.queryValue(lastNode, this.__req);
         };
         ExternalExpression.prototype.unsuppress = function () {
             var value = this.valueOf();

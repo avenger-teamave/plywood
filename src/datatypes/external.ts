@@ -1265,14 +1265,14 @@ module Plywood {
       throw new Error("can not call getQueryAndPostProcess directly");
     }
 
-    public queryValue(lastNode: boolean, externalForNext: External = null): Q.Promise<PlywoodValue> {
+    public queryValue(lastNode: boolean, externalForNext: External = null, req?: any): Q.Promise<PlywoodValue> {
       const { mode, requester } = this;
 
       if (!externalForNext) externalForNext = this;
 
       var delegate = this.getDelegate();
       if (delegate) {
-        return delegate.queryValue(lastNode, externalForNext);
+        return delegate.queryValue(lastNode, externalForNext, req);
       }
 
       if (!requester) {
@@ -1295,7 +1295,7 @@ module Plywood {
         finalResult = helper.promiseWhile(
           () => query,
           () => {
-            return requester({ query })
+            return requester({ query, req })
               .then((result) => {
                 results.push(result);
                 query = next(query, result);
@@ -1306,7 +1306,7 @@ module Plywood {
             return queryAndPostProcess.postProcess(results);
           })
       } else {
-        finalResult = requester({ query })
+        finalResult = requester({ query, req })
           .then(queryAndPostProcess.postProcess);
       }
 
