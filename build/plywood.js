@@ -7406,7 +7406,7 @@ var Plywood;
             var external = this.external;
             if (external.suppress)
                 return Q(external);
-            return external.queryValue(lastNode, this.__req);
+            return external.queryValue(lastNode, null, this.__req);
         };
         ExternalExpression.prototype.unsuppress = function () {
             var value = this.valueOf();
