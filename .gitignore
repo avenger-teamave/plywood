@@ -4,3 +4,4 @@
 /node_modules/
 /notes/
 /docs/examples/play.js
+./npm-debug.log

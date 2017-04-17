@@ -6173,6 +6173,7 @@ var Plywood;
             Expression.classMap[op] = ex;
         };
         Expression.fromJS = function (expressionJS) {
+          console.log("XXX");
             if (!hasOwnProperty(expressionJS, "op")) {
                 throw new Error("op must be defined");
             }
