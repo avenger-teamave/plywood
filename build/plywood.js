@@ -7346,7 +7346,7 @@ var Plywood;
 (function (Plywood) {
     var ExternalExpression = (function (_super) {
         __extends(ExternalExpression, _super);
-        function ExternalExpression(parameters, any=null) {
+        function ExternalExpression(parameters, req=null) {
             _super.call(this, parameters, dummyObject);
             var external = parameters.external;
             if (!external)
