@@ -6172,8 +6172,7 @@ var Plywood;
             var op = ex.name.replace('Expression', '').replace(/^\w/, function (s) { return s.toLowerCase(); });
             Expression.classMap[op] = ex;
         };
-        Expression.fromJS = function (expressionJS) {
-          console.log("XXX");
+        Expression.fromJS = function (expressionJS, req = null) {
             if (!hasOwnProperty(expressionJS, "op")) {
                 throw new Error("op must be defined");
             }
@@ -6185,7 +6184,7 @@ var Plywood;
             if (!ClassFn) {
                 throw new Error("unsupported expression op '" + op + "'");
             }
-            return ClassFn.fromJS(expressionJS);
+            return ClassFn.fromJS(expressionJS, req);
         };
         Expression.prototype._ensureOp = function (op) {
             if (!this.op) {
@@ -6948,7 +6947,7 @@ var Plywood;
 (function (Plywood) {
     var LiteralExpression = (function (_super) {
         __extends(LiteralExpression, _super);
-        function LiteralExpression(parameters) {
+        function LiteralExpression(parameters, req) {
             _super.call(this, parameters, dummyObject);
             var value = parameters.value;
             this.value = value;
@@ -6958,8 +6957,9 @@ var Plywood;
             }
             this.type = Plywood.getValueType(value);
             this.simple = true;
+            this.__req = req;
         }
-        LiteralExpression.fromJS = function (parameters) {
+        LiteralExpression.fromJS = function (parameters, req = null) {
             var value = {
                 op: parameters.op,
                 type: parameters.type
@@ -7132,7 +7132,7 @@ var Plywood;
     var TYPE_REGEXP = /:([A-Z\/_]+)$/;
     var RefExpression = (function (_super) {
         __extends(RefExpression, _super);
-        function RefExpression(parameters) {
+        function RefExpression(parameters, req) {
             _super.call(this, parameters, dummyObject);
             this._ensureOp("ref");
             var name = parameters.name;
@@ -7157,8 +7157,9 @@ var Plywood;
             }
             this.remote = Boolean(parameters.remote);
             this.simple = true;
+            this.__req = req;
         }
-        RefExpression.fromJS = function (parameters) {
+        RefExpression.fromJS = function (parameters, req = null) {
             var value;
             if (hasOwnProperty(parameters, 'nest')) {
                 value = parameters;
@@ -7345,7 +7346,7 @@ var Plywood;
 (function (Plywood) {
     var ExternalExpression = (function (_super) {
         __extends(ExternalExpression, _super);
-        function ExternalExpression(parameters) {
+        function ExternalExpression(parameters, any=null) {
             _super.call(this, parameters, dummyObject);
             var external = parameters.external;
             if (!external)
@@ -7354,8 +7355,9 @@ var Plywood;
             this._ensureOp('external');
             this.type = external.mode === 'value' ? 'NUMBER' : 'DATASET';
             this.simple = true;
+            this.__req = req;
         }
-        ExternalExpression.fromJS = function (parameters) {
+        ExternalExpression.fromJS = function (parameters, req = null) {
             var value = {
                 op: parameters.op
             };
@@ -7429,7 +7431,7 @@ var Plywood;
 (function (Plywood) {
     var ChainExpression = (function (_super) {
         __extends(ChainExpression, _super);
-        function ChainExpression(parameters) {
+        function ChainExpression(parameters, req) {
             _super.call(this, parameters, dummyObject);
             var expression = parameters.expression;
             this.expression = expression;
@@ -7444,8 +7446,9 @@ var Plywood;
                 type = action.getOutputType(type);
             }
             this.type = type;
+            this.__req = req;
         }
-        ChainExpression.fromJS = function (parameters) {
+        ChainExpression.fromJS = function (parameters, req = null) {
             var value = {
                 op: parameters.op
             };
