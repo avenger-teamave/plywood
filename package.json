@@ -1,0 +1,50 @@
+{
+  "name": "plywood",
+  "version": "0.10.30",
+  "description": "split-apply-combine; unify data and vis; with single language",
+  "keywords": [
+    "split",
+    "apply",
+    "combine",
+    "visualization"
+  ],
+  "author": {
+    "name": "Vadim Ogievetsky",
+    "url": "http://vadim.ogievetsky.com"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/implydata/plywood.git"
+  },
+  "main": "build/plywood.js",
+  "typescript": {
+    "definition": "build/plywood.d.ts"
+  },
+  "scripts": {
+    "prepublish": "./prepublish"
+  },
+  "tonicExampleFilename": "docs/examples/tonic.js",
+  "dependencies": {
+    "immutable-class": "0.4.4",
+    "q": "1.4.1"
+  },
+  "peerDependencies": {
+    "chronoshift": "0.4.x"
+  },
+  "devDependencies": {
+    "browserify": "13.0.1",
+    "chai": "3.5.0",
+    "chronoshift": "0.4.5",
+    "istanbul": "0.4.3",
+    "mocha": "2.5.3",
+    "pegjs": "0.9.0",
+    "plywood-druid-requester": "1.4.3",
+    "plywood-mysql-requester": "1.2.3",
+    "plywood-postgres-requester": "0.8.5",
+    "tslint": "3.10.2",
+    "typescript": "1.8.10",
+    "underscore": "1.8.3",
+    "walltime-js": "0.1.2"
+  }
+}

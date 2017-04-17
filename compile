@@ -1,0 +1,15 @@
+#!/bin/bash
+
+echo "Compiling..."
+
+rm -rf build/*
+mkdir -p build
+
+echo "Compiling PEG.js"
+./compile-pegjs
+
+echo "Compiling TypeScript"
+./compile-tsc
+
+echo "Compiling package"
+./compile-package
