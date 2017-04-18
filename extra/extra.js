@@ -11,11 +11,11 @@ try {
   process.exit(0);
 }
 
-defData += '\n';
+defData += '\r\n';
 
 // Delete:
 // initial crud
-defData = defData.replace(/interface DELETE_START[\s\S]+interface DELETE_END[^}]+}\n/, '');
+defData = defData.replace(/interface DELETE_START[\s\S]+interface DELETE_END[^}]+}\r\n/, '');
 
 // Ensure it was deleted
 if (defData.indexOf('declare var module') !== -1) {
@@ -23,13 +23,13 @@ if (defData.indexOf('declare var module') !== -1) {
 }
 
 var i = 0;
-defData = defData.replace(/}\ndeclare module Plywood \{\n/g, function(str) {
+defData = defData.replace(/}\r\ndeclare module Plywood \{\r\n/g, function(str) {
   i++;
   return i === 1 ? str : '';
 });
 
 // remove protected
-defData = defData.replace(/ +protected [^\n]+\n/g, '');
+defData = defData.replace(/ +protected [^\r\n]+\r\n/g, '');
 
 // Make explicit node module
 var defDataCommonJS = defData.replace(/declare module Plywood/, 'declare module "plywood"');

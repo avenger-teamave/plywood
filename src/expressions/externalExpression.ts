@@ -1,6 +1,6 @@
 module Plywood {
   export class ExternalExpression extends Expression {
-    static fromJS(parameters: ExpressionJS, req?: any = null): Expression {
+    static fromJS(parameters: ExpressionJS, req?: any): Expression {
       var value: ExpressionValue = {
         op: parameters.op
       };
@@ -10,7 +10,7 @@ module Plywood {
 
     public external: External;
 
-    constructor(parameters: ExpressionValue, req?: any = null) {
+    constructor(parameters: ExpressionValue, req?: any) {
       super(parameters, dummyObject);
       var external = parameters.external;
       if (!external) throw new Error('must have an external');

@@ -1,6 +1,6 @@
 module Plywood {
   export class LiteralExpression extends Expression {
-    static fromJS(parameters: ExpressionJS, req?: any = null): LiteralExpression {
+    static fromJS(parameters: ExpressionJS, req?: any): LiteralExpression {
       var value: ExpressionValue = {
         op: parameters.op,
         type: parameters.type
@@ -17,7 +17,7 @@ module Plywood {
 
     public value: any;
 
-    constructor(parameters: ExpressionValue, req?: any = null) {
+    constructor(parameters: ExpressionValue, req?: any) {
       super(parameters, dummyObject);
       var value = parameters.value;
       this.value = value;
