@@ -18561,13 +18561,13 @@ var Plywood;
             }
             return value;
         };
-        ChainExpression.prototype._computeResolved = function (req) {
+        ChainExpression.prototype._computeResolved = function (req, req2) {
             var _a = this, expression = _a.expression, actions = _a.actions;
             if (expression.isOp('external')) {
-                return expression._computeResolved(false, req).then(function (exV) {
+                return expression._computeResolved(false, req2 || req).then(function (exV) {
                     var newExpression = Plywood.r(exV).performActions(actions).simplify();
                     if (newExpression.hasExternal()) {
-                        return newExpression._computeResolved(true, req);
+                        return newExpression._computeResolved(true, req2 || req);
                     }
                     else {
                         return newExpression.getFn()(null, null);
@@ -18585,7 +18585,7 @@ var Plywood;
                         if (actionExpression.hasExternal()) {
                             return dataset.applyPromise(action.name, function (d) {
                                 var simpleExpression = actionExpression.resolve(d).simplify();
-                                return simpleExpression._computeResolved(simpleExpression.isOp('external'), req);
+                                return simpleExpression._computeResolved(simpleExpression.isOp('external'), req2 || req);
                             }, actionExpression.type, null);
                         }
                         else {

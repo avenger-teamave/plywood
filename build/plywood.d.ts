@@ -1057,7 +1057,7 @@ declare module "plywood" {
         headActions(n: int): Expression;
         popAction(): Expression;
         _computeResolvedSimulate(lastNode: boolean, simulatedQueries: any[]): PlywoodValue;
-        _computeResolved(req?: any): Q.Promise<PlywoodValue>;
+        _computeResolved(req?: any, req2?: any): Q.Promise<PlywoodValue>;
         extractFromAnd(matchFn: ExpressionMatchFn): ExtractAndRest;
         maxPossibleSplitValues(): number;
     }
