@@ -1583,7 +1583,7 @@ declare module "plywood" {
         getTimezone(): Timezone;
     }
     interface Executor {
-        (ex: Expression, env?: Environment): Q.Promise<PlywoodValue>;
+        (ex: Expression, env?: Environment, req?: any): Q.Promise<PlywoodValue>;
     }
     interface BasicExecutorParameters {
         datasets: Datum;

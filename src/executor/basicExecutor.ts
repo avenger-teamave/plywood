@@ -1,6 +1,6 @@
 module Plywood {
   export interface Executor {
-    (ex: Expression, env?: Environment): Q.Promise<PlywoodValue>;
+    (ex: Expression, env?: Environment,req?: any): Q.Promise<PlywoodValue>;
   }
 
   export interface BasicExecutorParameters {
