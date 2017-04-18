@@ -1,16 +1,16 @@
 module Plywood {
   export class ExternalExpression extends Expression {
-    static fromJS(parameters: ExpressionJS, req?: any): Expression {
+    static fromJS(parameters: ExpressionJS): Expression {
       var value: ExpressionValue = {
         op: parameters.op
       };
       value.external = External.fromJS(parameters.external);
-      return new ExternalExpression(value, req);
+      return new ExternalExpression(value);
     }
 
     public external: External;
 
-    constructor(parameters: ExpressionValue, req?: any) {
+    constructor(parameters: ExpressionValue) {
       super(parameters, dummyObject);
       var external = parameters.external;
       if (!external) throw new Error('must have an external');
@@ -18,8 +18,6 @@ module Plywood {
       this._ensureOp('external');
       this.type = external.mode === 'value' ? 'NUMBER' : 'DATASET'; // ToDo: not always number
       this.simple = true;
-
-      this.__req = req;
     }
 
     public valueOf(): ExpressionValue {

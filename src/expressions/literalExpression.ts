@@ -1,6 +1,6 @@
 module Plywood {
   export class LiteralExpression extends Expression {
-    static fromJS(parameters: ExpressionJS, req?: any): LiteralExpression {
+    static fromJS(parameters: ExpressionJS): LiteralExpression {
       var value: ExpressionValue = {
         op: parameters.op,
         type: parameters.type
@@ -12,12 +12,12 @@ module Plywood {
       } else {
         value.value = valueFromJS(v, parameters.type);
       }
-      return new LiteralExpression(value, req);
+      return new LiteralExpression(value);
     }
 
     public value: any;
 
-    constructor(parameters: ExpressionValue, req?: any) {
+    constructor(parameters: ExpressionValue) {
       super(parameters, dummyObject);
       var value = parameters.value;
       this.value = value;
@@ -27,7 +27,6 @@ module Plywood {
       }
       this.type = getValueType(value);
       this.simple = true;
-      this.__req = req;
     }
 
     public valueOf(): ExpressionValue {

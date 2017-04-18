@@ -1,6 +1,6 @@
 module Plywood {
   export class ChainExpression extends Expression {
-    static fromJS(parameters: ExpressionJS, req?: any): ChainExpression {
+    static fromJS(parameters: ExpressionJS): ChainExpression {
       var value: ExpressionValue = {
         op: parameters.op
       };
@@ -12,13 +12,13 @@ module Plywood {
         value.actions = parameters.actions.map(Action.fromJS);
       }
 
-      return new ChainExpression(value, req);
+      return new ChainExpression(value);
     }
 
     public expression: Expression;
     public actions: Action[];
 
-    constructor(parameters: ExpressionValue, req?: any) {
+    constructor(parameters: ExpressionValue) {
       super(parameters, dummyObject);
       var expression = parameters.expression;
       this.expression = expression;
@@ -32,7 +32,6 @@ module Plywood {
         type = action.getOutputType(type);
       }
       this.type = type;
-      this.__req = req;
     }
 
     public valueOf(): ExpressionValue {

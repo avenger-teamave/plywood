@@ -24,7 +24,7 @@ module Plywood {
   export class RefExpression extends Expression {
     static SIMPLE_NAME_REGEXP = /^([a-z_]\w*)$/i;
 
-    static fromJS(parameters: ExpressionJS, req?: any): RefExpression {
+    static fromJS(parameters: ExpressionJS): RefExpression {
       var value: ExpressionValue;
       if (hasOwnProperty(parameters, 'nest')) {
         value = <any>parameters;
@@ -36,7 +36,7 @@ module Plywood {
           type: parameters.type
         }
       }
-      return new RefExpression(value, req);
+      return new RefExpression(value);
     }
 
     static parse(str: string): RefExpression {
@@ -81,7 +81,7 @@ module Plywood {
     public name: string;
     public remote: boolean;
 
-    constructor(parameters: ExpressionValue, req?: any) {
+    constructor(parameters: ExpressionValue) {
       super(parameters, dummyObject);
       this._ensureOp("ref");
 
@@ -110,7 +110,6 @@ module Plywood {
 
       this.remote = Boolean(parameters.remote);
       this.simple = true;
-      this.__req = req;
     }
 
     public valueOf(): ExpressionValue {

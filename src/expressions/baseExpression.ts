@@ -364,7 +364,7 @@ module Plywood {
      * @param expressionJS
      * @param req
      */
-    static fromJS(expressionJS: ExpressionJS, req?: any): Expression {
+    static fromJS(expressionJS: ExpressionJS): Expression {
       if (!hasOwnProperty(expressionJS, "op")) {
         throw new Error("op must be defined");
       }
@@ -377,13 +377,12 @@ module Plywood {
         throw new Error(`unsupported expression op '${op}'`);
       }
 
-      return ClassFn.fromJS(expressionJS, req);
+      return ClassFn.fromJS(expressionJS);
     }
 
     public op: string;
     public type: PlyType;
     public simple: boolean;
-    public __req: any;
 
     constructor(parameters: ExpressionValue, dummy: Dummy = null) {
       this.op = parameters.op;

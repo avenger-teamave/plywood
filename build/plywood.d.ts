@@ -855,11 +855,10 @@ declare module "plywood" {
         static concat(expressions: Expression[]): Expression;
         static classMap: Lookup<typeof Expression>;
         static register(ex: typeof Expression): void;
-        static fromJS(expressionJS: ExpressionJS, req?: any): Expression;
+        static fromJS(expressionJS: ExpressionJS): Expression;
         op: string;
         type: PlyType;
         simple: boolean;
-        __req: any;
         constructor(parameters: ExpressionValue, dummy?: Dummy);
         valueOf(): ExpressionValue;
         toJS(): ExpressionJS;
@@ -974,9 +973,9 @@ declare module "plywood" {
         _computeResolved(lastNode: boolean, req?: any): Q.Promise<PlywoodValue>;
     }
     class LiteralExpression extends Expression {
-        static fromJS(parameters: ExpressionJS, req?: any): LiteralExpression;
+        static fromJS(parameters: ExpressionJS): LiteralExpression;
         value: any;
-        constructor(parameters: ExpressionValue, req?: any);
+        constructor(parameters: ExpressionValue);
         valueOf(): ExpressionValue;
         toJS(): ExpressionJS;
         toString(): string;
@@ -995,14 +994,14 @@ declare module "plywood" {
     const POSSIBLE_TYPES: Lookup<number>;
     class RefExpression extends Expression {
         static SIMPLE_NAME_REGEXP: RegExp;
-        static fromJS(parameters: ExpressionJS, req?: any): RefExpression;
+        static fromJS(parameters: ExpressionJS): RefExpression;
         static parse(str: string): RefExpression;
         static validType(typeName: string): boolean;
         static toSimpleName(variableName: string): string;
         nest: int;
         name: string;
         remote: boolean;
-        constructor(parameters: ExpressionValue, req?: any);
+        constructor(parameters: ExpressionValue);
         valueOf(): ExpressionValue;
         toJS(): ExpressionJS;
         toString(): string;
@@ -1016,9 +1015,9 @@ declare module "plywood" {
         maxPossibleSplitValues(): number;
     }
     class ExternalExpression extends Expression {
-        static fromJS(parameters: ExpressionJS, req?: any): Expression;
+        static fromJS(parameters: ExpressionJS): Expression;
         external: External;
-        constructor(parameters: ExpressionValue, req?: any);
+        constructor(parameters: ExpressionValue);
         valueOf(): ExpressionValue;
         toJS(): ExpressionJS;
         toString(): string;
@@ -1032,10 +1031,10 @@ declare module "plywood" {
         maxPossibleSplitValues(): number;
     }
     class ChainExpression extends Expression {
-        static fromJS(parameters: ExpressionJS, req?: any): ChainExpression;
+        static fromJS(parameters: ExpressionJS): ChainExpression;
         expression: Expression;
         actions: Action[];
-        constructor(parameters: ExpressionValue, req?: any);
+        constructor(parameters: ExpressionValue);
         valueOf(): ExpressionValue;
         toJS(): ExpressionJS;
         toString(indent?: int): string;
