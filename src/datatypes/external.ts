@@ -1295,7 +1295,7 @@ module Plywood {
         finalResult = helper.promiseWhile(
           () => query,
           () => {
-            return requester({ query, req })
+            return requester({ query, context:{ decoratorContext: req } })
               .then((result) => {
                 results.push(result);
                 query = next(query, result);
@@ -1306,7 +1306,7 @@ module Plywood {
             return queryAndPostProcess.postProcess(results);
           })
       } else {
-        finalResult = requester({ query, req })
+        finalResult = requester({ query, context:{ decoratorContext: req } })
           .then(queryAndPostProcess.postProcess);
       }
 

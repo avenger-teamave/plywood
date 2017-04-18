@@ -3509,7 +3509,7 @@ var Plywood;
             if (next) {
                 var results = [];
                 finalResult = Plywood.helper.promiseWhile(function () { return query; }, function () {
-                    return requester({ query: query, req: req })
+                    return requester({ query: query, context: { decoratorContext: req } })
                         .then(function (result) {
                         results.push(result);
                         query = next(query, result);
@@ -3520,7 +3520,7 @@ var Plywood;
                 });
             }
             else {
-                finalResult = requester({ query: query, req: req })
+                finalResult = requester({ query: query, context: { decoratorContext: req } })
                     .then(queryAndPostProcess.postProcess);
             }
             if (!lastNode && mode === 'split') {
