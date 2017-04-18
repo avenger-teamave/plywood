@@ -14205,14 +14205,14 @@ var Plywood;
         External.prototype.getQueryAndPostProcess = function () {
             throw new Error("can not call getQueryAndPostProcess directly");
         };
-        External.prototype.queryValue = function (lastNode, externalForNext) {
+        External.prototype.queryValue = function (lastNode, externalForNext, req) {
             if (externalForNext === void 0) { externalForNext = null; }
             var _a = this, mode = _a.mode, requester = _a.requester;
             if (!externalForNext)
                 externalForNext = this;
             var delegate = this.getDelegate();
             if (delegate) {
-                return delegate.queryValue(lastNode, externalForNext);
+                return delegate.queryValue(lastNode, externalForNext, req);
             }
             if (!requester) {
                 return Q.reject(new Error('must have a requester to make queries'));
@@ -14231,7 +14231,7 @@ var Plywood;
             if (next) {
                 var results = [];
                 finalResult = Plywood.helper.promiseWhile(function () { return query; }, function () {
-                    return requester({ query: query })
+                    return requester({ query: query, req: req })
                         .then(function (result) {
                         results.push(result);
                         query = next(query, result);
@@ -14242,7 +14242,7 @@ var Plywood;
                 });
             }
             else {
-                finalResult = requester({ query: query })
+                finalResult = requester({ query: query, req: req })
                     .then(queryAndPostProcess.postProcess);
             }
             if (!lastNode && mode === 'split') {
@@ -16894,7 +16894,7 @@ var Plywood;
             var op = ex.name.replace('Expression', '').replace(/^\w/, function (s) { return s.toLowerCase(); });
             Expression.classMap[op] = ex;
         };
-        Expression.fromJS = function (expressionJS) {
+        Expression.fromJS = function (expressionJS, req) {
             if (!hasOwnProperty(expressionJS, "op")) {
                 throw new Error("op must be defined");
             }
@@ -16906,7 +16906,7 @@ var Plywood;
             if (!ClassFn) {
                 throw new Error("unsupported expression op '" + op + "'");
             }
-            return ClassFn.fromJS(expressionJS);
+            return ClassFn.fromJS(expressionJS, req);
         };
         Expression.prototype._ensureOp = function (op) {
             if (!this.op) {
@@ -17637,7 +17637,7 @@ var Plywood;
         Expression.prototype._computeResolvedSimulate = function (lastNode, simulatedQueries) {
             throw new Error("can not call this directly");
         };
-        Expression.prototype.compute = function (context, environment) {
+        Expression.prototype.compute = function (context, environment, req) {
             var _this = this;
             if (context === void 0) { context = {}; }
             if (environment === void 0) { environment = {}; }
@@ -17653,10 +17653,10 @@ var Plywood;
                 if (readyExpression instanceof Plywood.ExternalExpression) {
                     readyExpression = readyExpression.unsuppress();
                 }
-                return readyExpression._computeResolved(true);
+                return readyExpression._computeResolved(true, req);
             });
         };
-        Expression.prototype._computeResolved = function (lastNode) {
+        Expression.prototype._computeResolved = function (lastNode, req) {
             throw new Error("can not call this directly");
         };
         Expression.classMap = {};
@@ -17669,7 +17669,7 @@ var Plywood;
 (function (Plywood) {
     var LiteralExpression = (function (_super) {
         __extends(LiteralExpression, _super);
-        function LiteralExpression(parameters) {
+        function LiteralExpression(parameters, req) {
             _super.call(this, parameters, dummyObject);
             var value = parameters.value;
             this.value = value;
@@ -17679,8 +17679,9 @@ var Plywood;
             }
             this.type = Plywood.getValueType(value);
             this.simple = true;
+            this.__req = req;
         }
-        LiteralExpression.fromJS = function (parameters) {
+        LiteralExpression.fromJS = function (parameters, req) {
             var value = {
                 op: parameters.op,
                 type: parameters.type
@@ -17694,7 +17695,7 @@ var Plywood;
             else {
                 value.value = Plywood.valueFromJS(v, parameters.type);
             }
-            return new LiteralExpression(value);
+            return new LiteralExpression(value, req);
         };
         LiteralExpression.prototype.valueOf = function () {
             var value = _super.prototype.valueOf.call(this);
@@ -17853,7 +17854,7 @@ var Plywood;
     var TYPE_REGEXP = /:([A-Z\/_]+)$/;
     var RefExpression = (function (_super) {
         __extends(RefExpression, _super);
-        function RefExpression(parameters) {
+        function RefExpression(parameters, req) {
             _super.call(this, parameters, dummyObject);
             this._ensureOp("ref");
             var name = parameters.name;
@@ -17878,8 +17879,9 @@ var Plywood;
             }
             this.remote = Boolean(parameters.remote);
             this.simple = true;
+            this.__req = req;
         }
-        RefExpression.fromJS = function (parameters) {
+        RefExpression.fromJS = function (parameters, req) {
             var value;
             if (hasOwnProperty(parameters, 'nest')) {
                 value = parameters;
@@ -17892,7 +17894,7 @@ var Plywood;
                     type: parameters.type
                 };
             }
-            return new RefExpression(value);
+            return new RefExpression(value, req);
         };
         RefExpression.parse = function (str) {
             var refValue = { op: 'ref' };
@@ -18066,7 +18068,7 @@ var Plywood;
 (function (Plywood) {
     var ExternalExpression = (function (_super) {
         __extends(ExternalExpression, _super);
-        function ExternalExpression(parameters) {
+        function ExternalExpression(parameters, req) {
             _super.call(this, parameters, dummyObject);
             var external = parameters.external;
             if (!external)
@@ -18075,13 +18077,14 @@ var Plywood;
             this._ensureOp('external');
             this.type = external.mode === 'value' ? 'NUMBER' : 'DATASET';
             this.simple = true;
+            this.__req = req;
         }
-        ExternalExpression.fromJS = function (parameters) {
+        ExternalExpression.fromJS = function (parameters, req) {
             var value = {
                 op: parameters.op
             };
             value.external = Plywood.External.fromJS(parameters.external);
-            return new ExternalExpression(value);
+            return new ExternalExpression(value, req);
         };
         ExternalExpression.prototype.valueOf = function () {
             var value = _super.prototype.valueOf.call(this);
@@ -18121,11 +18124,11 @@ var Plywood;
                 return external;
             return external.simulateValue(lastNode, simulatedQueries);
         };
-        ExternalExpression.prototype._computeResolved = function (lastNode) {
+        ExternalExpression.prototype._computeResolved = function (lastNode, req) {
             var external = this.external;
             if (external.suppress)
                 return Q(external);
-            return external.queryValue(lastNode);
+            return external.queryValue(lastNode, null, req);
         };
         ExternalExpression.prototype.unsuppress = function () {
             var value = this.valueOf();
@@ -18150,7 +18153,7 @@ var Plywood;
 (function (Plywood) {
     var ChainExpression = (function (_super) {
         __extends(ChainExpression, _super);
-        function ChainExpression(parameters) {
+        function ChainExpression(parameters, req) {
             _super.call(this, parameters, dummyObject);
             var expression = parameters.expression;
             this.expression = expression;
@@ -18165,8 +18168,9 @@ var Plywood;
                 type = action.getOutputType(type);
             }
             this.type = type;
+            this.__req = req;
         }
-        ChainExpression.fromJS = function (parameters) {
+        ChainExpression.fromJS = function (parameters, req) {
             var value = {
                 op: parameters.op
             };
@@ -18179,7 +18183,7 @@ var Plywood;
                     throw new Error('chain `actions` must be an array');
                 value.actions = parameters.actions.map(Plywood.Action.fromJS);
             }
-            return new ChainExpression(value);
+            return new ChainExpression(value, req);
         };
         ChainExpression.prototype.valueOf = function () {
             var value = _super.prototype.valueOf.call(this);
@@ -18557,13 +18561,13 @@ var Plywood;
             }
             return value;
         };
-        ChainExpression.prototype._computeResolved = function () {
+        ChainExpression.prototype._computeResolved = function (req) {
             var _a = this, expression = _a.expression, actions = _a.actions;
             if (expression.isOp('external')) {
-                return expression._computeResolved(false).then(function (exV) {
+                return expression._computeResolved(false, req).then(function (exV) {
                     var newExpression = Plywood.r(exV).performActions(actions).simplify();
                     if (newExpression.hasExternal()) {
-                        return newExpression._computeResolved(true);
+                        return newExpression._computeResolved(true, req);
                     }
                     else {
                         return newExpression.getFn()(null, null);
@@ -18581,7 +18585,7 @@ var Plywood;
                         if (actionExpression.hasExternal()) {
                             return dataset.applyPromise(action.name, function (d) {
                                 var simpleExpression = actionExpression.resolve(d).simplify();
-                                return simpleExpression._computeResolved(simpleExpression.isOp('external'));
+                                return simpleExpression._computeResolved(simpleExpression.isOp('external'), req);
                             }, actionExpression.type, null);
                         }
                         else {
@@ -22140,9 +22144,9 @@ var Plywood;
 (function (Plywood) {
     function basicExecutorFactory(parameters) {
         var datasets = parameters.datasets;
-        return function (ex, env) {
+        return function (ex, env, req) {
             if (env === void 0) { env = {}; }
-            return ex.compute(datasets, env);
+            return ex.compute(datasets, env, req);
         };
     }
     Plywood.basicExecutorFactory = basicExecutorFactory;
@@ -24811,8 +24815,94 @@ exports.immutableLookupsEqual = immutableLookupsEqual;
 
 },{}],8:[function(require,module,exports){
 // shim for using process in browser
-
 var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
 var queue = [];
 var draining = false;
 var currentQueue;
@@ -24837,7 +24927,7 @@ function drainQueue() {
     if (draining) {
         return;
     }
-    var timeout = setTimeout(cleanUpNextTick);
+    var timeout = runTimeout(cleanUpNextTick);
     draining = true;
 
     var len = queue.length;
@@ -24854,7 +24944,7 @@ function drainQueue() {
     }
     currentQueue = null;
     draining = false;
-    clearTimeout(timeout);
+    runClearTimeout(timeout);
 }
 
 process.nextTick = function (fun) {
@@ -24866,7 +24956,7 @@ process.nextTick = function (fun) {
     }
     queue.push(new Item(fun, args));
     if (queue.length === 1 && !draining) {
-        setTimeout(drainQueue, 0);
+        runTimeout(drainQueue);
     }
 };
 

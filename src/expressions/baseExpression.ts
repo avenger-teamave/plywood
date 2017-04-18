@@ -1317,8 +1317,9 @@ module Plywood {
      * Computes a general asynchronous expression
      * @param context The context within which to compute the expression
      * @param environment The environment for the default of the expression
+     * @param req
      */
-    public compute(context: Datum = {}, environment: Environment = {}): Q.Promise<PlywoodValue> {
+    public compute(context: Datum = {}, environment: Environment = {}, req?: any): Q.Promise<PlywoodValue> {
       if (!datumHasExternal(context) && !this.hasExternal()) {
         return Q.fcall(() => {
           var referenceChecked = this.defineEnvironment(environment).referenceCheck(context);
@@ -1332,11 +1333,11 @@ module Plywood {
             // Top level externals need to be unsuppressed
             readyExpression = (<ExternalExpression>readyExpression).unsuppress()
           }
-          return readyExpression._computeResolved(true);
+          return readyExpression._computeResolved(true, req);
         });
     }
 
-    public _computeResolved(lastNode: boolean): Q.Promise<PlywoodValue> {
+    public _computeResolved(lastNode: boolean, req?: any): Q.Promise<PlywoodValue> {
       throw new Error("can not call this directly");
     }
   }

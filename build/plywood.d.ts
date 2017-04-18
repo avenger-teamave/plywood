@@ -859,6 +859,7 @@ declare module "plywood" {
         op: string;
         type: PlyType;
         simple: boolean;
+        __req: any;
         constructor(parameters: ExpressionValue, dummy?: Dummy);
         valueOf(): ExpressionValue;
         toJS(): ExpressionJS;
@@ -969,8 +970,8 @@ declare module "plywood" {
         simulate(context?: Datum, environment?: Environment): PlywoodValue;
         simulateQueryPlan(context?: Datum, environment?: Environment): any[];
         _computeResolvedSimulate(lastNode: boolean, simulatedQueries: any[]): PlywoodValue;
-        compute(context?: Datum, environment?: Environment): Q.Promise<PlywoodValue>;
-        _computeResolved(lastNode: boolean): Q.Promise<PlywoodValue>;
+        compute(context?: Datum, environment?: Environment, req?: any): Q.Promise<PlywoodValue>;
+        _computeResolved(lastNode: boolean, req?: any): Q.Promise<PlywoodValue>;
     }
     class LiteralExpression extends Expression {
         static fromJS(parameters: ExpressionJS, req?: any): LiteralExpression;
@@ -1025,7 +1026,7 @@ declare module "plywood" {
         equals(other: ExternalExpression): boolean;
         _fillRefSubstitutions(typeContext: DatasetFullType, indexer: Indexer, alterations: Alterations): FullType;
         _computeResolvedSimulate(lastNode: boolean, simulatedQueries: any[]): PlywoodValue;
-        _computeResolved(lastNode: boolean): Q.Promise<PlywoodValue>;
+        _computeResolved(lastNode: boolean, req?: any): Q.Promise<PlywoodValue>;
         unsuppress(): ExternalExpression;
         addAction(action: Action): ExternalExpression;
         maxPossibleSplitValues(): number;
@@ -1056,7 +1057,7 @@ declare module "plywood" {
         headActions(n: int): Expression;
         popAction(): Expression;
         _computeResolvedSimulate(lastNode: boolean, simulatedQueries: any[]): PlywoodValue;
-        _computeResolved(): Q.Promise<PlywoodValue>;
+        _computeResolved(req?: any): Q.Promise<PlywoodValue>;
         extractFromAnd(matchFn: ExpressionMatchFn): ExtractAndRest;
         maxPossibleSplitValues(): number;
     }

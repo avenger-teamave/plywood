@@ -9,8 +9,8 @@ module Plywood {
 
   export function basicExecutorFactory(parameters: BasicExecutorParameters): Executor {
     var datasets = parameters.datasets;
-    return (ex: Expression, env: Environment = {}) => {
-      return ex.compute(datasets, env);
+    return (ex: Expression, env: Environment = {}, req?: any) => {
+      return ex.compute(datasets, env, req);
     }
   }
 }

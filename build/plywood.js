@@ -6172,7 +6172,7 @@ var Plywood;
             var op = ex.name.replace('Expression', '').replace(/^\w/, function (s) { return s.toLowerCase(); });
             Expression.classMap[op] = ex;
         };
-        Expression.fromJS = function (expressionJS, req = null) {
+        Expression.fromJS = function (expressionJS, req) {
             if (!hasOwnProperty(expressionJS, "op")) {
                 throw new Error("op must be defined");
             }
@@ -6915,7 +6915,7 @@ var Plywood;
         Expression.prototype._computeResolvedSimulate = function (lastNode, simulatedQueries) {
             throw new Error("can not call this directly");
         };
-        Expression.prototype.compute = function (context, environment) {
+        Expression.prototype.compute = function (context, environment, req) {
             var _this = this;
             if (context === void 0) { context = {}; }
             if (environment === void 0) { environment = {}; }
@@ -6931,10 +6931,10 @@ var Plywood;
                 if (readyExpression instanceof Plywood.ExternalExpression) {
                     readyExpression = readyExpression.unsuppress();
                 }
-                return readyExpression._computeResolved(true);
+                return readyExpression._computeResolved(true, req);
             });
         };
-        Expression.prototype._computeResolved = function (lastNode) {
+        Expression.prototype._computeResolved = function (lastNode, req) {
             throw new Error("can not call this directly");
         };
         Expression.classMap = {};
@@ -6959,7 +6959,7 @@ var Plywood;
             this.simple = true;
             this.__req = req;
         }
-        LiteralExpression.fromJS = function (parameters, req = null) {
+        LiteralExpression.fromJS = function (parameters, req) {
             var value = {
                 op: parameters.op,
                 type: parameters.type
@@ -7159,7 +7159,7 @@ var Plywood;
             this.simple = true;
             this.__req = req;
         }
-        RefExpression.fromJS = function (parameters, req = null) {
+        RefExpression.fromJS = function (parameters, req) {
             var value;
             if (hasOwnProperty(parameters, 'nest')) {
                 value = parameters;
@@ -7346,7 +7346,7 @@ var Plywood;
 (function (Plywood) {
     var ExternalExpression = (function (_super) {
         __extends(ExternalExpression, _super);
-        function ExternalExpression(parameters, req=null) {
+        function ExternalExpression(parameters, req) {
             _super.call(this, parameters, dummyObject);
             var external = parameters.external;
             if (!external)
@@ -7357,7 +7357,7 @@ var Plywood;
             this.simple = true;
             this.__req = req;
         }
-        ExternalExpression.fromJS = function (parameters, req = null) {
+        ExternalExpression.fromJS = function (parameters, req) {
             var value = {
                 op: parameters.op
             };
@@ -7402,11 +7402,11 @@ var Plywood;
                 return external;
             return external.simulateValue(lastNode, simulatedQueries);
         };
-        ExternalExpression.prototype._computeResolved = function (lastNode) {
+        ExternalExpression.prototype._computeResolved = function (lastNode, req) {
             var external = this.external;
             if (external.suppress)
                 return Q(external);
-            return external.queryValue(lastNode, null, this.__req);
+            return external.queryValue(lastNode, null, req);
         };
         ExternalExpression.prototype.unsuppress = function () {
             var value = this.valueOf();
@@ -7448,7 +7448,7 @@ var Plywood;
             this.type = type;
             this.__req = req;
         }
-        ChainExpression.fromJS = function (parameters, req = null) {
+        ChainExpression.fromJS = function (parameters, req) {
             var value = {
                 op: parameters.op
             };
@@ -7839,13 +7839,13 @@ var Plywood;
             }
             return value;
         };
-        ChainExpression.prototype._computeResolved = function () {
+        ChainExpression.prototype._computeResolved = function (req) {
             var _a = this, expression = _a.expression, actions = _a.actions;
             if (expression.isOp('external')) {
-                return expression._computeResolved(false).then(function (exV) {
+                return expression._computeResolved(false, req).then(function (exV) {
                     var newExpression = Plywood.r(exV).performActions(actions).simplify();
                     if (newExpression.hasExternal()) {
-                        return newExpression._computeResolved(true);
+                        return newExpression._computeResolved(true, req);
                     }
                     else {
                         return newExpression.getFn()(null, null);
@@ -7863,7 +7863,7 @@ var Plywood;
                         if (actionExpression.hasExternal()) {
                             return dataset.applyPromise(action.name, function (d) {
                                 var simpleExpression = actionExpression.resolve(d).simplify();
-                                return simpleExpression._computeResolved(simpleExpression.isOp('external'));
+                                return simpleExpression._computeResolved(simpleExpression.isOp('external'), req);
                             }, actionExpression.type, null);
                         }
                         else {
@@ -11422,9 +11422,9 @@ var Plywood;
 (function (Plywood) {
     function basicExecutorFactory(parameters) {
         var datasets = parameters.datasets;
-        return function (ex, env) {
+        return function (ex, env, req) {
             if (env === void 0) { env = {}; }
-            return ex.compute(datasets, env);
+            return ex.compute(datasets, env, req);
         };
     }
     Plywood.basicExecutorFactory = basicExecutorFactory;

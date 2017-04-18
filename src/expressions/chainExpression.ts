@@ -443,14 +443,14 @@ module Plywood {
       return value;
     }
 
-    public _computeResolved(): Q.Promise<PlywoodValue> {
+    public _computeResolved(req?: any): Q.Promise<PlywoodValue> {
       var { expression, actions } = this;
 
       if (expression.isOp('external')) {
-        return expression._computeResolved(false).then((exV) => {
+        return expression._computeResolved(false, req).then((exV) => {
           var newExpression = r(exV).performActions(actions).simplify();
           if (newExpression.hasExternal()) {
-            return newExpression._computeResolved(true);
+            return newExpression._computeResolved(true, req);
           } else {
             return newExpression.getFn()(null, null);
           }
@@ -469,7 +469,7 @@ module Plywood {
             if (actionExpression.hasExternal()) {
               return dataset.applyPromise(action.name, (d: Datum) => {
                 var simpleExpression = actionExpression.resolve(d).simplify();
-                return simpleExpression._computeResolved(simpleExpression.isOp('external'));
+                return simpleExpression._computeResolved(simpleExpression.isOp('external'), req);
               }, actionExpression.type, null);
             } else {
               return dataset.apply(action.name, actionExpression.getFn(), actionExpression.type, null);
