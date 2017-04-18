@@ -11,11 +11,12 @@ try {
   process.exit(0);
 }
 
-defData += '\r\n';
+var newLine = require('os').EOL.length === 2 ? '\\r\\n' : '\\n';
+defData += "\r\n";
 
 // Delete:
 // initial crud
-defData = defData.replace(/interface DELETE_START[\s\S]+interface DELETE_END[^}]+}\r\n/, '');
+defData = defData.replace(new RegExp('interface DELETE_START[\\s\\S]+interface DELETE_END[^}]+}' + newLine), '');
 
 // Ensure it was deleted
 if (defData.indexOf('declare var module') !== -1) {
@@ -23,13 +24,13 @@ if (defData.indexOf('declare var module') !== -1) {
 }
 
 var i = 0;
-defData = defData.replace(/}\r\ndeclare module Plywood \{\r\n/g, function(str) {
+defData = defData.replace(new RegExp('}' + newLine + 'declare module Plywood \\{' + newLine, 'g'), function(str) {
   i++;
   return i === 1 ? str : '';
 });
 
 // remove protected
-defData = defData.replace(/ +protected [^\r\n]+\r\n/g, '');
+defData = defData.replace(new RegExp(' +protected [^' + newLine + ']+' + newLine, 'g'), '');
 
 // Make explicit node module
 var defDataCommonJS = defData.replace(/declare module Plywood/, 'declare module "plywood"');
